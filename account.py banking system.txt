@@ -1,6 +1,6 @@
 ﻿"""
 account.py
-Base Account class — demonstrates encapsulation and abstraction.
+
 """
 
 from datetime import datetime
@@ -12,9 +12,6 @@ class InsufficientFundsError(Exception):
 
 
 class Account:
-    """
-    Abstract base representation of a bank account.
-    Handles core banking logic: deposits, withdrawals, and transaction history.
     """
 
     _account_counter = 1000  # Class-level counter for unique account IDs
