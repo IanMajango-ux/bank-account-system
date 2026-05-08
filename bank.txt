@@ -1,0 +1,111 @@
+﻿"""
+bank.py
+The Bank class — manages all accounts.
+Demonstrates composition, modularity, and single-responsibility principle.
+"""
+
+from bank.account import Account, InsufficientFundsError
+from bank.account_types import SavingsAccount, CurrentAccount, FixedDepositAccount
+from typing import Optional
+
+
+class Bank:
+    """
+    Central bank manager.
+    Responsible for creating accounts, processing transfers, and reporting.
+    """
+
+    def __init__(self, name: str):
+        self._name = name
+        self._accounts: dict[str, Account] = {}
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    # ── Account Creation ────────────────────────────────────────
+
+    def open_savings(self, owner: str, deposit: float = 0.0) -> SavingsAccount:
+        acc = SavingsAccount(owner, deposit)
+        self._register(acc)
+        return acc
+
+    def open_current(self, owner: str, deposit: float = 0.0) -> CurrentAccount:
+        acc = CurrentAccount(owner, deposit)
+        self._register(acc)
+        return acc
+
+    def open_fixed_deposit(self, owner: str, deposit: float, term_months: int = 12) -> FixedDepositAccount:
+        acc = FixedDepositAccount(owner, deposit, term_months)
+        self._register(acc)
+        return acc
+
+    # ── Core Operations ─────────────────────────────────────────
+
+    def transfer(self, from_acc_no: str, to_acc_no: str, amount: float) -> bool:
+        """
+        Transfer funds between two accounts within the bank.
+        Atomic: if withdrawal fails, deposit never happens.
+        """
+        sender = self._get(from_acc_no)
+        receiver = self._get(to_acc_no)
+
+        if not sender or not receiver:
+            print("  ✘ Transfer failed: one or both account numbers not found.")
+            return False
+
+        try:
+            sender.withdraw(amount)
+            receiver.deposit(amount)
+            print(
+                f"  ✔ Transferred KES {amount:,.2f} from "
+                f"A/C {from_acc_no} ({sender.owner}) → "
+                f"A/C {to_acc_no} ({receiver.owner})"
+            )
+            return True
+        except (InsufficientFundsError, PermissionError) as e:
+            print(f"  ✘ Transfer failed: {e}")
+            return False
+
+    def apply_interest_all_savings(self):
+        """Apply monthly interest to every savings account."""
+        count = 0
+        for acc in self._accounts.values():
+            if isinstance(acc, SavingsAccount):
+                acc.apply_interest()
+                count += 1
+        print(f"  ✔ Interest applied to {count} savings account(s).")
+
+    # ── Reporting ───────────────────────────────────────────────
+
+    def list_accounts(self):
+        """Print a summary table of all accounts."""
+        print(f"\n{'='*60}")
+        print(f"  {self._name} — All Accounts")
+        print(f"{'='*60}")
+        print(f"  {'A/C No':<8} {'Owner':<20} {'Type':<22} {'Balance (KES)':>12}")
+        print(f"  {'-'*56}")
+        for acc in self._accounts.values():
+            print(
+                f"  {acc.account_number:<8} {acc.owner:<20} "
+                f"{acc.account_type:<22} {acc.balance:>12,.2f}"
+            )
+        print(f"{'='*60}\n")
+
+    def total_deposits(self) -> float:
+        total = sum(a.balance for a in self._accounts.values())
+        print(f"  Total deposits held: KES {total:,.2f}")
+        return total
+
+    def find_account(self, account_number: str) -> Optional[Account]:
+        return self._get(account_number)
+
+    # ── Private Helpers ─────────────────────────────────────────
+
+    def _register(self, account: Account):
+        self._accounts[account.account_number] = account
+        print(f"  ✔ New {account.account_type} opened for {account.owner} | A/C No: {account.account_number}")
+
+    def _get(self, account_number: str) -> Optional[Account]:
+        return self._accounts.get(account_number)
+

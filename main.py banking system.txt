@@ -1,0 +1,97 @@
+﻿"""
+main.py
+Demo script — runs a full simulation of the Bank Account System.
+Run with: python main.py
+"""
+
+from bank import Bank, InsufficientFundsError
+
+
+def divider(title: str):
+    print(f"\n{'─'*50}")
+    print(f"  {title}")
+    print(f"{'─'*50}")
+
+
+def main():
+    print("\n" + "="*50)
+    print("   PYTHON OOP BANK ACCOUNT SYSTEM")
+    print("   by Ian Alfred Majango")
+    print("="*50)
+
+    # ── Step 1: Create the bank ──────────────────────────────
+    divider("Step 1: Setting up the bank")
+    riara_bank = Bank("Riara Bank Ltd")
+
+    # ── Step 2: Open accounts ────────────────────────────────
+    divider("Step 2: Opening accounts")
+    ian_savings    = riara_bank.open_savings("Ian Majango", deposit=15000)
+    alice_savings  = riara_bank.open_savings("Alice Wanjiku", deposit=8000)
+    bob_current    = riara_bank.open_current("Bob Otieno", deposit=25000)
+    fixed_dep      = riara_bank.open_fixed_deposit("Carol Muthoni", deposit=50000, term_months=12)
+
+    # ── Step 3: Deposits & withdrawals ──────────────────────
+    divider("Step 3: Deposits and Withdrawals")
+
+    ian_savings.deposit(5000)
+    print(f"  Ian's balance after deposit: KES {ian_savings.balance:,.2f}")
+
+    ian_savings.withdraw(2000)
+    print(f"  Ian's balance after withdrawal: KES {ian_savings.balance:,.2f}")
+
+    bob_current.withdraw(3000)
+    print(f"  Bob's balance after withdrawal (incl. fee): KES {bob_current.balance:,.2f}")
+
+    # ── Step 4: Error handling ───────────────────────────────
+    divider("Step 4: Error Handling")
+
+    print("  Trying to over-withdraw from Alice's savings...")
+    try:
+        alice_savings.withdraw(8000)  # Would breach minimum balance
+    except InsufficientFundsError as e:
+        print(f"  ✘ Caught error: {e}")
+
+    print("\n  Trying to deposit into a fixed deposit account...")
+    try:
+        fixed_dep.deposit(1000)
+    except PermissionError as e:
+        print(f"  ✘ Caught error: {e}")
+
+    print("\n  Trying to withdraw from locked fixed deposit...")
+    try:
+        fixed_dep.withdraw(10000)
+    except PermissionError as e:
+        print(f"  ✘ Caught error: {e}")
+
+    # ── Step 5: Interest ─────────────────────────────────────
+    divider("Step 5: Applying Interest")
+    riara_bank.apply_interest_all_savings()
+
+    print("\n  Maturing Carol's fixed deposit...")
+    fixed_dep.mature()
+    print(f"  Carol's balance after maturity: KES {fixed_dep.balance:,.2f}")
+
+    # ── Step 6: Transfers ────────────────────────────────────
+    divider("Step 6: Fund Transfer")
+    riara_bank.transfer(
+        bob_current.account_number,
+        ian_savings.account_number,
+        5000
+    )
+
+    # ── Step 7: Account listing ──────────────────────────────
+    divider("Step 7: All Accounts Summary")
+    riara_bank.list_accounts()
+    riara_bank.total_deposits()
+
+    # ── Step 8: Individual statements ───────────────────────
+    divider("Step 8: Mini Statements")
+    print(ian_savings.get_statement())
+    print(bob_current.get_statement())
+
+    print("\n  Simulation complete. ✔\n")
+
+
+if __name__ == "__main__":
+    main()
+
