@@ -5,7 +5,7 @@ Designed to demonstrate core OOP principles: **encapsulation, inheritance, polym
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 bank_system/
@@ -34,7 +34,7 @@ bank_system/
 
 ---
 
-## 🏧 Account Types
+##  Account Types
 
 ### Savings Account
 - Earns **3.5% monthly interest**
