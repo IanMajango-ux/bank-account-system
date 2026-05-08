@@ -1,7 +1,7 @@
 ﻿"""
 bank.py
 The Bank class — manages all accounts.
-Demonstrates composition, modularity, and single-responsibility principle.
+
 """
 
 from bank.account import Account, InsufficientFundsError
@@ -10,10 +10,7 @@ from typing import Optional
 
 
 class Bank:
-    """
-    Central bank manager.
-    Responsible for creating accounts, processing transfers, and reporting.
-    """
+   
 
     def __init__(self, name: str):
         self._name = name
@@ -45,7 +42,7 @@ class Bank:
     def transfer(self, from_acc_no: str, to_acc_no: str, amount: float) -> bool:
         """
         Transfer funds between two accounts within the bank.
-        Atomic: if withdrawal fails, deposit never happens.
+        
         """
         sender = self._get(from_acc_no)
         receiver = self._get(to_acc_no)
