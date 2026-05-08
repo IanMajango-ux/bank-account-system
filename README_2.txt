@@ -48,50 +48,27 @@ bank_system/
 - Funds **locked for a set term** (no withdrawals until maturity)
 - Interest rates: **5% (< 6 months)**, **7% (6–11 months)**, **10% (12+ months)**
 
----
 
-## 🚀 How to Run
-
-```bash
-# Clone the repo
-git clone https://github.com/ianmajango/bank-account-system.git
-cd bank-account-system
-
-# Run the demo
 python main.py
 ```
-
-No external dependencies — uses Python 3.10+ standard library only.
-
 ---
 
-## 📋 Sample Output
-
-```
+##
 ══════════════════════════════════════════════════
    PYTHON OOP BANK ACCOUNT SYSTEM
    by Ian Alfred Majango
 ══════════════════════════════════════════════════
 
-  ✔ New Savings Account opened for Ian Majango | A/C No: 1001
-  ✔ New Current Account opened for Bob Otieno  | A/C No: 1003
-  ✔ Transferred KES 5,000.00 from A/C 1003 → A/C 1001
-  ✔ Interest applied to 2 savings account(s).
-```
+   New Savings Account opened for Ian Majango | A/C No: 1001
+   New Current Account opened for Bob Otieno  | A/C No: 1003
+   Transferred KES 5,000.00 from A/C 1003 → A/C 1001
+   Interest applied to 2 savings account(s).
 
 ---
 
-## 🧠 Key Design Decisions
-
-- **Single Responsibility**: Each class has one job — `Account` handles transactions, `Bank` handles management.
-- **Open/Closed Principle**: New account types can be added by subclassing `Account` without modifying existing code.
-- **DRY (Don't Repeat Yourself)**: Shared logic (deposit, logging, statement) lives in the base class only.
-
----
-
-## 👤 Author
+##
 
 **Ian Alfred Majango**  
 BSc Information & Cybersecurity — Riara University  
-GitHub: [github.com/ianmajango](https://github.com/ianmajango)
+GitHub: [github.com/ianmajango-ux](https://github.com/ianmajango-ux)
 
